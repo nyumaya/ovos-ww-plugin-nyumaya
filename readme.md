@@ -1,5 +1,6 @@
 ## Description
 Mycroft wake word plugin for [Nyumaya](https://github.com/nyumaya) version 3.1.0
+Compatible with 3.1.X models.
 
 ### Performance
 - Pi Zero: CPU 52%
