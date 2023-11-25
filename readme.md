@@ -1,10 +1,12 @@
 ## Description
-Mycroft wake word plugin for [Nyumaya](https://github.com/nyumaya) version 1.0.0
+Mycroft wake word plugin for [Nyumaya](https://github.com/nyumaya) version 3.1.0
 
 ### Performance
-- Pi Zero: CPU 40%
-- Pi 3: CPU
+- Pi Zero: CPU 52%
+- Pi 3: CPU one core: 12%
 - Pi 4: CPU one core: 4%
+- i.MX8 CPU one core: 4%
+- i.MX6 CPU one core: 11.9% (CortexA9)
 
 ## Install
 
