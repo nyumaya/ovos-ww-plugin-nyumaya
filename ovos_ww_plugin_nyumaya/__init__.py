@@ -27,15 +27,15 @@ class NyumayaWakeWordPlugin(HotWordEngine):
         self.labels = config.get("labels")
 
         model = config.get("model", "alexa")
-        models_folder = join(dirname(__file__), "models", "hotwords")
+        models_folder = join(dirname(__file__), "models", "Hotword")
         if model == "alexa":
-            self.model = join(models_folder, "alexa_v1.0.0.premium")
+            self.model = join(models_folder, "alexa_v3.1.286.premium")
         elif model == "marvin":
-            self.model = join(models_folder, "marvin_v1.0.0.premium")
+            self.model = join(models_folder, "marvin_v3.1.286.premium")
         elif model == "sheila":
-            self.model = join(models_folder, "sheila_v1.0.0.premium")
+            self.model = join(models_folder, "sheila_v3.1.286.premium")
         elif model == "firefox":
-            self.model = join(models_folder, "firefox_v1.0.0.premium")
+            self.model = join(models_folder, "firefox_v3.1.294.premium")
         elif exists(model):
             self.model = model
         elif exists(join(models_folder, model)):
