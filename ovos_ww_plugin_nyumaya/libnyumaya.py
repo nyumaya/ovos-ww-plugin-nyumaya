@@ -14,8 +14,12 @@ def _get_lib():
         elif machine == "armv6":
             return join(dirname(__file__), "lib", "armv6",
                         "libnyumaya_premium.so")
+        #Pi3 says it's armv7 although its armv8
         elif machine == "armv7":
-            return join(dirname(__file__), "lib", "armv7",
+            return join(dirname(__file__), "lib", "armv8",
+                        "libnyumaya_premium.so")
+        elif machine == "aarch64":
+            return join(dirname(__file__), "lib", "aarch64",
                         "libnyumaya_premium.so")
         else:
             raise RuntimeError("Machine not supported")
@@ -50,10 +54,6 @@ class NyumayaDetector:
         self._lib.runDetection.argtypes = [c_void_p, POINTER(c_uint8), c_int]
         self._lib.runDetection.restype = c_int
 
-        self._lib.runRawDetection.argtypes = [c_void_p, POINTER(c_uint8),
-                                              c_int]
-        self._lib.runRawDetection.restype = POINTER(c_uint8)
-
         self._lib.addModel.argtypes = [c_void_p, c_char_p, c_float]
         self._lib.addModel.restype = c_int
 
@@ -84,16 +84,16 @@ class NyumayaDetector:
             version_string = version_string[:-1]
             major, minor, rev = version_string.split('.')
 
-        if major != "1":
+        if major != "3":
             print("Your library version is not compatible with this API")
 
     def add_model(self, path, sensitivity=0.5):
-        model_number = c_int()
+        model_number = c_int32()
         # modelNumberBuffer = pcm.from_buffer_copy(modelNumber)
 
         success = self._lib.addModel(self.model, path.encode('ascii'),
                                      sensitivity,
-                                     byref(model_number))
+                                     pointer(model_number))
         if success != 0:
             print("Libnyumaya: Failed to open model")
             return -1
@@ -123,13 +123,6 @@ class NyumayaDetector:
         prediction = self._lib.runDetection(self.model, pcmdata, datalen)
         return prediction
 
-    def run_raw_detection(self, data):
-        datalen = int(len(data))
-        pcm = c_uint8 * datalen
-        pcmdata = pcm.from_buffer_copy(data)
-        prediction = self._lib.runRawDetection(self.model, pcmdata, datalen)
-        re = [prediction[i] for i in range(2)]
-        return re
 
     def set_sensitivity(self, sens, model_number=None):
         model_number = model_number or self.model_number
@@ -145,8 +138,8 @@ class NyumayaDetector:
 
 class FeatureExtractor:
 
-    def __init__(self, nfft=512, melcount=40, sample_rate=16000,
-                 lowerf=20, upperf=8000, window_len=0.03, shift=0.01):
+    def __init__(self, nfft=1024, melcount=80, sample_rate=16000,
+                 lowerf=50, upperf=4000, window_len=0.03, shift=0.01):
         self.melcount = melcount
         self.shift = sample_rate * shift
         self.gain = 1
