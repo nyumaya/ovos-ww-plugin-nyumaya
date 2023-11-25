@@ -21,13 +21,14 @@ def label_stream(graph, sensitivity):
         while True:
             frame = audio_stream.read(bufsize * 2, bufsize * 2)
             if not frame:
+                time.sleep(0.01)
                 continue
 
             features = extractor.signal_to_mel(frame, extactor_gain)
 
             prediction = detector.run_detection(features)
 
-            if prediction:
+            if (prediction != 0):
                 now = datetime.now().strftime("%d.%b %Y %H:%M:%S")
                 print("detected " + now)
 
@@ -40,9 +41,9 @@ if __name__ == '__main__':
     import argparse
     from os.path import dirname, join
 
-    models_folder = join(dirname(dirname(__file__)), "ovos_ww_plugin_nyumaya_legacy",
+    models_folder = join(dirname(dirname(__file__)), "ovos_ww_plugin_nyumaya",
                          "models")
-    default_model = join(models_folder, "hotwords", "alexa_v1.0.0.premium")
+    default_model = join(models_folder, "Hotword", "alexa_v3.1.286.premium")
 
     parser = argparse.ArgumentParser()
 
